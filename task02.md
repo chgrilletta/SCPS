@@ -27,22 +27,26 @@ for N in [10, 10**6, 10**8]:
 
 ### C Code (`vector_sum.c`)
 ```c
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>  // For fabs() function
+
+#define TOLERANCE 1e-6  // Tolerance for floating-point comparison
 
 void check_vector(int N) {
     double a = 3.0;
     double x = 0.1;
     double y = 7.1;
 
-    // Dynamic memory allocation for the vector
+    // Dynamic allocation of vector
     double* d = (double*)malloc(N * sizeof(double));
     if (d == NULL) {
-        printf("Memory allocation error for N = %d\n", N);
+        printf("Errore nell'allocazione di memoria per N = %d\n", N);
         return;
     }
 
-    // Calculating vector d
+    // Calculation of vector d
     for (int i = 0; i < N; i++) {
         d[i] = a * x + y;
     }
@@ -50,19 +54,19 @@ void check_vector(int N) {
     // Verification
     int valid = 1;
     for (int i = 0; i < N; i++) {
-        if (d[i] != 7.4) {
+        if (fabs(d[i] - 7.4) > TOLERANCE) {
             valid = 0;
             break;
         }
     }
 
     if (valid) {
-        printf("All elements of vector d are correct for N = %d\n", N);
+        printf("Tutti gli elementi del vettore d sono corretti per N = %d\n", N);
     } else {
-        printf("Error for N = %d\n", N);
+        printf("Errore per N = %d\n", N);
     }
 
-    // Freeing memory
+    // Free memory
     free(d);
 }
 
