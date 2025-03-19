@@ -79,7 +79,7 @@ int main() {
 
     return 0;
 }
-
+```
 
 ---
 
@@ -105,54 +105,79 @@ for N in [10, 100, 10000]:
 
 ### C Code (`matrix_multiply.c`)
 ```c
-#include <stdio.h>
+ #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <math.h> // For fabs()
 
-void matrix_multiply(int N) {
-    double **A = (double **)malloc(N * sizeof(double *));
-    double **B = (double **)malloc(N * sizeof(double *));
-    double **C = (double **)malloc(N * sizeof(double *));
+#define TOLERANCE 1e-6  // Tolerance for floating-point comparison
+
+void check_matrix(int N) {
+    double A_value = 3.0;
+    double B_value = 7.1;
+
+    // Dynamic memory allocation for matrices
+    double** A = (double**)malloc(N * sizeof(double*));
+    double** B = (double**)malloc(N * sizeof(double*));
+    double** C = (double**)malloc(N * sizeof(double*));
 
     for (int i = 0; i < N; i++) {
-        A[i] = (double *)malloc(N * sizeof(double));
-        B[i] = (double *)malloc(N * sizeof(double));
-        C[i] = (double *)malloc(N * sizeof(double));
+        A[i] = (double*)malloc(N * sizeof(double));
+        B[i] = (double*)malloc(N * sizeof(double));
+        C[i] = (double*)calloc(N, sizeof(double));  // Faster zero-initialization
+
         for (int j = 0; j < N; j++) {
-            A[i][j] = 3.0;
-            B[i][j] = 7.1;
-            C[i][j] = 0.0;
+            A[i][j] = A_value;
+            B[i][j] = B_value;
         }
     }
 
+    // Optimized matrix multiplication (loop reordering)
     for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            for (int k = 0; k < N; k++) {
-                C[i][j] += A[i][k] * B[k][j];
+        for (int k = 0; k < N; k++) {
+            double temp = A[i][k];
+            for (int j = 0; j < N; j++) {
+                C[i][j] += temp * B[k][j];
             }
         }
     }
 
-    printf("Matrix C for N=%d:\n", N);
+    // Verification
+    double expected_value = N * 21.3;
+    int valid = 1;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            printf("%.1f ", C[i][j]);
+            if (fabs(C[i][j] - expected_value) > TOLERANCE) {
+                valid = 0;
+                break;
+            }
         }
-        printf("\n");
+        if (!valid) break;
     }
 
+    if (valid) {
+        printf("All elements of matrix C are correct for N = %d\n", N);
+    } else {
+        printf("Error for N = %d\n", N);
+    }
+
+    // Free allocated memory
     for (int i = 0; i < N; i++) {
         free(A[i]);
         free(B[i]);
         free(C[i]);
     }
-    free(A); free(B); free(C);
+    free(A);
+    free(B);
+    free(C);
 }
 
 int main() {
-    matrix_multiply(10);
-    matrix_multiply(100);
-    matrix_multiply(10000);
+    int dimensions[] = {10, 100, 10000};
+
+    for (int i = 0; i < 3; i++) {
+        check_matrix(dimensions[i]);
+    }
+
     return 0;
 }
 ```
