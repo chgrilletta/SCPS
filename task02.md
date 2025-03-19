@@ -35,19 +35,19 @@ void check_vector(int N) {
     double x = 0.1;
     double y = 7.1;
 
-    // Allocazione dinamica del vettore
+    // Dynamic memory allocation for the vector
     double* d = (double*)malloc(N * sizeof(double));
     if (d == NULL) {
-        printf("Errore nell'allocazione di memoria per N = %d\n", N);
+        printf("Memory allocation error for N = %d\n", N);
         return;
     }
 
-    // Calcolo del vettore d
+    // Calculating vector d
     for (int i = 0; i < N; i++) {
         d[i] = a * x + y;
     }
 
-    // Verifica
+    // Verification
     int valid = 1;
     for (int i = 0; i < N; i++) {
         if (d[i] != 7.4) {
@@ -57,12 +57,12 @@ void check_vector(int N) {
     }
 
     if (valid) {
-        printf("Tutti gli elementi del vettore d sono corretti per N = %d\n", N);
+        printf("All elements of vector d are correct for N = %d\n", N);
     } else {
-        printf("Errore per N = %d\n", N);
+        printf("Error for N = %d\n", N);
     }
 
-    // Liberazione della memoria
+    // Freeing memory
     free(d);
 }
 
