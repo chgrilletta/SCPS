@@ -29,31 +29,53 @@ for N in [10, 10**6, 10**8]:
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
-void vector_sum(double a, double x_val, double y_val, int N) {
-    double *d = (double*)malloc(N * sizeof(double));
+void check_vector(int N) {
+    double a = 3.0;
+    double x = 0.1;
+    double y = 7.1;
 
-    for (int i = 0; i < N; i++) {
-        d[i] = a * x_val + y_val;
+    // Allocazione dinamica del vettore
+    double* d = (double*)malloc(N * sizeof(double));
+    if (d == NULL) {
+        printf("Errore nell'allocazione di memoria per N = %d\n", N);
+        return;
     }
 
-    printf("N = %d\n", N);
+    // Calcolo del vettore d
     for (int i = 0; i < N; i++) {
-        printf("%.1f ", d[i]);
+        d[i] = a * x + y;
     }
-    printf("\n");
 
+    // Verifica
+    int valid = 1;
+    for (int i = 0; i < N; i++) {
+        if (d[i] != 7.4) {
+            valid = 0;
+            break;
+        }
+    }
+
+    if (valid) {
+        printf("Tutti gli elementi del vettore d sono corretti per N = %d\n", N);
+    } else {
+        printf("Errore per N = %d\n", N);
+    }
+
+    // Liberazione della memoria
     free(d);
 }
 
 int main() {
-    vector_sum(3, 0.1, 7.1, 10);
-    vector_sum(3, 0.1, 7.1, 1000000);
-    vector_sum(3, 0.1, 7.1, 100000000);
+    int dimensions[] = {10, 1000000, 100000000};
+
+    for (int i = 0; i < 3; i++) {
+        check_vector(dimensions[i]);
+    }
+
     return 0;
 }
-```
+
 
 ---
 
